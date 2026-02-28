@@ -38,20 +38,16 @@ exports.create = (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
 
-  const [updated] = await Book.update(req.body, {
-    where: { id }
-  });
-
-  if (!updated) {
+  const book = await Book.findByPk(id);
+  if (!book) {
     return res.status(404).json({ message: "Book not found" });
   }
-  else
-  {
-    const updatedBook = await Book.findByPk(id);
-    return res.status(200).json(updatedBook);
-  }
+
+  await book.update(req.body);
+
+  return res.status(200).json(book);
 };
 
 exports.find = async (req, res) => { 
@@ -63,17 +59,16 @@ exports.find = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
 
-  const deleted = await Book.destroy({
-    where: { id }
-  });
-
-  if (!deleted) {
+  const book = await Book.findByPk(id);
+  if (!book) {
     return res.status(404).json({ message: "Book not found" });
   }
 
-  return res.status(204).send(); 
+  await book.destroy();
+
+  return res.status(204).send();
 };
 
 exports.datatable = async (req, res) => {
