@@ -18,27 +18,21 @@ exports.validate = [
     .isNumeric().withMessage("Year must be a number")
 ];
 
-exports.create = async (req, res) => {
+exports.create = (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  try {
-    const book = await Book.create({
-      title: req.body.title,
-      author: req.body.author,
-      year: req.body.year
-    });
-
-    return res.status(201).json(book);
-
-  } catch (err) {
-    return res.status(401).json({
-      message: err.message || "Error creating book"
-    });
-  }
+  Book.create(req.body)
+  .then(data=>{
+       return res.status(201).json(data);
+  }).catch(err=>{
+      return res.status(401).json({
+        message: err.message || "Error creating book"
+      });
+  });
 };
 
 exports.find = (req, res) => {
@@ -122,7 +116,7 @@ exports.datatable = async (req, res) => {
     const { author } = req.query;
     var condition={};
    if (author) {
-      condition.author = { [Op.like]: `%${author}%` };
+      condition.author = author;
     }
 
     const page = parseInt(req.query.page) || 1;
