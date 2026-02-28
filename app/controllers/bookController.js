@@ -18,20 +18,24 @@ exports.validate = (req, res, next) => {
   next();
 };
 
-exports.create = async (req, res) => {
-    const book = await Book.create(
-      {
-        title: req.body.title.trim(),
-        author: req.body.author.trim(),
-        year: req.body.year
-      },
-      {
-        returning: true,
-        logging: false
-      }
-    );
-
-    res.status(201).json(book);
+exports.create = (req, res) => {
+    // ⚡ Optimized Sequelize - bypass semua overhead
+    Book.create({
+      title: req.body.title,
+      author: req.body.author,
+      year: req.body.year
+    }, {
+      validate: false,      // ⚡ Disable Sequelize validation
+      hooks: false,         // ⚡ Disable hooks
+      silent: true,         // ⚡ Don't update timestamps
+      logging: false        // ⚡ No SQL logging
+    })
+    .then(book => {
+      res.status(201).json(book);
+    })
+    .catch(err => {
+      res.status(500).json({ message: err.message });
+    });
 };
 
 exports.update = async (req, res) => {
