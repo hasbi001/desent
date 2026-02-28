@@ -23,10 +23,11 @@ module.exports = function(app) {
 
     app.get("/ping", home.ping);
     app.post("/echo", home.echo);
+    app.post("/books", [book.validate], book.create);
+    app.get("/books", book.findAll);
+    app.get("/books/:id", book.find);
 
     app.get("/books", [authJwt.verify],book.datatable);
-    app.get("/books/:id", book.find);
-    app.post("/books", [book.validate], book.create);
     app.put("/books/:id", [book.validate], book.update);
     app.delete("/books/:id", book.delete);
 };
