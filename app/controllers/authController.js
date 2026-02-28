@@ -98,21 +98,46 @@ exports.signout = async (req, res) => {
 };
 
 exports.generateToken = async (req,res)=>{
-  var key = null;
-  if (!req.body) {
-    key = "descent";
-  }
-  else
-  {
-    key = req.body.key;
-  }
-  const token = jwt.sign({ key: key },
+ try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid Password!",
+      });
+    }
+
+    const token = jwt.sign({ id: user.id },
                            config.secret,
                            {
                             algorithm: 'HS256',
                             allowInsecureKeySizes: true,
                             expiresIn: 86400, 
                            });
-  req.session.token = token;
-  res.status(200).send(token);
+
+    let authorities = [];
+    const roles = await user.getRoles();
+    for (let i = 0; i < roles.length; i++) {
+      authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    }
+
+    req.session.token = token;
+
+    return res.status(200).send(token);
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
 }
