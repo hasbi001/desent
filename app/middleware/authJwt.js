@@ -29,7 +29,7 @@ verify = (req, res, next) => {
   let token = req.session.token;
 
   if (!token) {
-    return res.status(403).send({
+    return res.status(401).send({
       message: "No token provided!",
     });
   }
