@@ -1,16 +1,23 @@
+const fs = require("fs");
+
 module.exports = {
   HOST: "mysql-210e9564-alihasbi001-2c23.j.aivencloud.com",
+  PORT: 24710, // <-- GANTI dengan port dari dashboard Aiven
   USER: "avnadmin",
-  PASSWORD: "AVNS_czQ0gBA9acWEm7MYTuv",
+  PASSWORD: "PASSWORD_KAMU",
   DB: "defaultdb",
   dialect: "mysql",
-  ssl: {
-    ca:"./ca.pem"
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: true,
+      ca: fs.readFileSync("./app/config/ca.pem")
+    }
   },
   pool: {
     max: 5,
     min: 0,
-    acquire: 30000,
+    acquire: 60000,
     idle: 10000
   }
 };
