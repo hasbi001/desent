@@ -9,16 +9,13 @@ exports.validate = [
     .isString().withMessage("Name must be a string")
     .isLength({ max: 255 }).withMessage("Name max 255 characters"),
 
-  body("description")
-    .isString().withMessage("SKU must be a string"),
-
   body("author")
     .notEmpty().withMessage("Author is required")
     .isString().withMessage("Author must be a string"),
 
-  body("publication_year")
-    .notEmpty().withMessage("Publication year is required")
-    .isNumeric().withMessage("Publication year must be a number")
+  body("year")
+    .notEmpty().withMessage("Year is required")
+    .isNumeric().withMessage("Year must be a number")
 ];
 
 exports.create = (req, res) => {
@@ -31,17 +28,13 @@ exports.create = (req, res) => {
 
     const data = {
         title: req.body.title,
-        description: req.body.description,
         author: req.body.author,
-        publication_year: req.body.publication_year
+        year: req.body.year
     };
 
     Book.create(data)
     .then(data => {
-      res.status(200).send({
-        message: "Success",
-        data:data
-      });
+      res.status(200).send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -57,10 +50,7 @@ exports.find = (req, res) => {
     Book.findByPk(id)
       .then(data => {
         if (data) {
-            res.status(200).send({
-                message: "Data has been created",
-                data:data
-            });
+            res.status(200).send(data);
         } else {
             res.status(404).send({
                 message: `Cannot find Book with id=${id}.`,
@@ -84,16 +74,12 @@ exports.update = (req, res) => {
         message: errors.array(),
         });
     }
-
     Book.update(req.body, {
         where: { id: id }
     })
     .then(num => {
         if (num == 1) {
-            res.status(200).send({
-                message: "Book was updated successfully",
-                data: req.body
-            });
+            res.status(200).send(req.body);
         } else {
             res.send({
                 message: `Cannot update Book with id=${id}. Maybe Product was not found or req.body is empty!`,
@@ -187,3 +173,33 @@ exports.datatable = async (req, res) => {
         });
     }
 }
+
+exports.findAll = (req, res) => {
+    
+    // const name = req.body.name;
+    // logger.writeToLog(name);
+    // var condName = name ? { name: { [Op.like]: `%${name}%` } } : null;
+    // const sku = req.body.sku;
+    // var condSku = sku ? { sku: { [Op.like]: `%${sku}%` } } : null;
+    var condition=null;
+    
+    // if (condName != null || condSku != null) {
+    //     condition = {
+    //         [Op.or]: [
+    //             condName,
+    //             condSku
+    //         ]
+    //     }
+    // }
+
+    Book.findAll({ where: condition
+        }).then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                err.message || "Some error occurred while retrieving products."
+            });
+        });
+};
