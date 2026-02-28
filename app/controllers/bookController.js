@@ -44,6 +44,14 @@ exports.update = async (req, res) => {
   res.json(req.body);
 };
 
+exports.find = async (req, res) => { 
+  const book = await Book.findByPk(req.params.id); 
+  if (!book) { 
+    return res.status(404).json({ message: "Book not found" }); 
+  } 
+  res.json(book); 
+};
+
 exports.delete = async (req, res) => {
   const deleted = await Book.destroy({
     where: { id: req.params.id }
