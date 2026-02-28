@@ -19,8 +19,6 @@ exports.validate = (req, res, next) => {
 };
 
 exports.create = async (req, res) => {
-  // Validation is now handled by the middleware above
-  try {
     const book = await Book.create(
       {
         title: req.body.title.trim(),
@@ -34,9 +32,6 @@ exports.create = async (req, res) => {
     );
 
     res.status(201).json(book);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
 };
 
 exports.update = async (req, res) => {
