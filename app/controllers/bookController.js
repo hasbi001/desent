@@ -124,19 +124,16 @@ exports.datatable = async (req, res) => {
     try {
         const title = req.query.title;
         var condTitle = title ? { title: { [Op.like]: `%${title}%` } } : null;
-        const description = req.query.description;
-        var condDesc = description ? { description: { [Op.like]: `%${description}%` } } : null;
         const author = req.query.author;
         var condAuthor = author ? { author: { [Op.like]: `%${author}%` } } : null;
-        const publicationYear = req.query.publication_year;
-        var condYear = publicationYear ? { publication_year: { [Op.like]: `%${publicationYear}%` } } : null;
+        const year = req.query.year;
+        var condYear = year ? { year: { [Op.like]: `%${year}%` } } : null;
         
         var condition=null;
         if (condTitle != null || condDesc != null || condAuthor != null || condYear != null) {
             condition = {
                 [Op.or]: [
                     condTitle,
-                    condDesc,
                     condAuthor,
                     condYear
                 ]
