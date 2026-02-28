@@ -43,21 +43,11 @@ verify = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.decode(token);
-
-    if (!decoded) {
-      return res.status(401).json({
-        message: "Unauthorized!",
-      });
-    }
-
+    const decoded = jwt.verify(token, config.secret);
     req.key = decoded.key;
-
     next();
   } catch (err) {
-    return res.status(401).json({
-      message: "Unauthorized!",
-    });
+    return res.status(401).json({ message: "Unauthorized!" });
   }
 };
 
