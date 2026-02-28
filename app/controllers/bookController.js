@@ -38,16 +38,21 @@ exports.create = (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  const book = await Book.findByPk(id);
-  if (!book) {
-    return res.status(404).json({ message: "Book not found" });
+    const book = await Book.findByPk(id);
+
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    await book.update(req.body);
+
+    return res.status(200).json(book);
+  } catch (err) {
+    return res.status(401).json({ message: err.message });
   }
-
-  await book.update(req.body);
-
-  return res.status(200).json(book);
 };
 
 exports.find = async (req, res) => { 
@@ -59,16 +64,21 @@ exports.find = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  const book = await Book.findByPk(id);
-  if (!book) {
-    return res.status(404).json({ message: "Book not found" });
+    const book = await Book.findByPk(id);
+
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    await book.destroy();
+
+    return res.status(204).send();
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
-
-  await book.destroy();
-
-  return res.status(204).send();
 };
 
 exports.datatable = async (req, res) => {
