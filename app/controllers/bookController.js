@@ -37,7 +37,7 @@ exports.create = (req, res) => {
       res.status(201).send(data);
     })
     .catch(err => {
-      res.status(500).send({
+      res.status(401).send({
         message:
           err.message || "Some error occurred while creating the Product."
       });
@@ -88,7 +88,7 @@ exports.update = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(500).send({
+        res.status(404).send({
             message: "Error updating Book with id=" + id,
             data: null
         });
