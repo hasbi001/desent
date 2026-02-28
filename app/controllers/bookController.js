@@ -122,7 +122,7 @@ exports.delete = (req, res) => {
 
 exports.datatable = async (req, res) => {
   try {
-    const { title, author, year } = req.query;
+    //const { title, author, year } = req.query;
 
     const title = req.query.title;
         var condTitle = title ? { title: { [Op.like]: `%${title}%` } } : null;
