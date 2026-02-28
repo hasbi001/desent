@@ -21,7 +21,7 @@ exports.validate = [
 exports.create = (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(401).json({
+        return res.status(400).json({
         message: errors.array(),
         });
     }
