@@ -72,24 +72,33 @@ exports.delete = async (req, res) => {
 
 exports.datatable = async (req, res) => {
   try {
-    const { author, page = 1, limit = 10 } = req.query;
-
-    const where = {};
-    if (author) where.author = author;
+    // ambil query & pastikan tipe number
+    const author = req.query.author || null;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     const offset = (page - 1) * limit;
 
-    const rows = await Book.findAll({
+    // filter exact match sesuai requirement tester
+    const where = {};
+    if (author) {
+      where.author = author;
+    }
+
+    const books = await Book.findAll({
       where,
-      limit: Number(limit),
-      offset: Number(offset),
+      limit,
+      offset,
       order: [["id", "ASC"]],
-      raw: true   // ⚡ penting: skip Sequelize instance build
+      raw: true,      // ⚡ return plain object
+      logging: false  // ⚡ speed boost
     });
 
-    res.json(rows);
+    return res.status(200).json(books || []);
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    return res.status(500).json([]);
   }
 };
 
