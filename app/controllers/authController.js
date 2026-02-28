@@ -99,7 +99,16 @@ exports.signout = async (req, res) => {
 
 exports.generateToken = async (req,res)=>{
    try {
-    const token = jwt.sign({ username: req.body.username },
+    const { username, password } = req.body;
+
+    // Validasi credential
+    if (username !== "admin" || password !== "password") {
+      return res.status(401).json({
+        message: "Invalid credentials"
+      });
+    }
+
+    const token = jwt.sign({ username: username },
                            config.secret,
                            {
                             algorithm: 'HS256',
