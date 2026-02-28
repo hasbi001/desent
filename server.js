@@ -21,6 +21,9 @@ app.use(
 const db = require("./app/models");
 const Role = db.role;
 
+db.sequelize.authenticate()
+  .then(() => console.log("DB connected"));
+
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
    initial();
