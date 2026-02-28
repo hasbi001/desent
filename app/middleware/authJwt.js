@@ -29,7 +29,7 @@ verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || authHeader.length < 8) {
-    return res.status(401).json({ message: "No token" });
+    return res.status(401).json([{ message: "No token" }]);
   }
 
   const token = authHeader.slice(7);
@@ -41,7 +41,7 @@ verify = (req, res, next) => {
     req.key = decoded.key;
     next();
   } catch {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json([{ message: "Unauthorized" }]);
   }
 };
 
