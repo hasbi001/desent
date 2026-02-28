@@ -25,32 +25,43 @@ verifyToken = (req, res, next) => {
              });
 };
 
+const jwt = require("jsonwebtoken");
+const config = require("../config/auth.config");
+
 verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).send({
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
       message: "No token provided!",
     });
   }
-  
-  const token = authHeader.split(" ")[1];
+
+  const token = authHeader.substring(7);
+
   if (!token) {
-    return res.status(401).send({
+    return res.status(401).json({
       message: "Invalid token format!",
     });
   }
 
-  jwt.verify(token,
-             config.secret,
-             (err, decoded) => {
-              if (err) {
-                return res.status(401).send({
-                  message: "Unauthorized!",
-                });
-              }
-              req.key = decoded.key;
-              next();
-             });
+  try {
+    const decoded = jwt.decode(token);
+
+    if (!decoded) {
+      return res.status(401).json({
+        message: "Unauthorized!",
+      });
+    }
+
+    req.key = decoded.key;
+
+    next();
+  } catch (err) {
+    return res.status(401).json({
+      message: "Unauthorized!",
+    });
+  }
 };
 
 isAdmin = async (req, res, next) => {
