@@ -18,30 +18,27 @@ exports.validate = [
     .isNumeric().withMessage("Year must be a number")
 ];
 
-exports.create = (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-        message: errors.array(),
-        });
-    }
+exports.create = async (req, res) => {
+  const errors = validationResult(req);
 
-    const data = {
-        title: req.body.title,
-        author: req.body.author,
-        year: req.body.year
-    };
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    Book.create(data)
-    .then(data => {
-      res.status(201).send(data);
-    })
-    .catch(err => {
-      res.status(401).send({
-        message:
-          err.message || "Some error occurred while creating the Product."
-      });
+  try {
+    const book = await Book.create({
+      title: req.body.title,
+      author: req.body.author,
+      year: req.body.year
     });
+
+    return res.status(201).json(book);
+
+  } catch (err) {
+    return res.status(401).json({
+      message: err.message || "Error creating book"
+    });
+  }
 };
 
 exports.find = (req, res) => {
@@ -122,28 +119,11 @@ exports.delete = (req, res) => {
 
 exports.datatable = async (req, res) => {
   try {
-    //const { title, author, year } = req.query;
-
-    const title = req.query.title;
-        var condTitle = title ? { title: { [Op.like]: `%${title}%` } } : null;
-        const description = req.query.description;
-        var condDesc = description ? { description: { [Op.like]: `%${description}%` } } : null;
-        const author = req.query.author;
-        var condAuthor = author ? { author: { [Op.like]: `%${author}%` } } : null;
-        const publicationYear = req.query.publication_year;
-        var condYear = publicationYear ? { publication_year: { [Op.like]: `%${publicationYear}%` } } : null;
-        
-        var condition={};
-        if (condTitle != null || condDesc != null || condAuthor != null || condYear != null) {
-            condition = {
-                [Op.or]: [
-                    condTitle,
-                    condDesc,
-                    condAuthor,
-                    condYear
-                ]
-            }
-        }
+    const { author } = req.query;
+    var condition={};
+   if (author) {
+      condition.author = { [Op.like]: `%${author}%` };
+    }
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
