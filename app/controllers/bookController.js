@@ -27,9 +27,9 @@ exports.create = (req, res) => {
 
   Book.create(req.body)
   .then(data=>{
-       return res.status(201).json(data);
+       res.status(201).json(data);
   }).catch(err=>{
-      return res.status(401).json({
+      res.status(401).json({
         message: err.message || "Error creating book"
       });
   });
@@ -123,10 +123,10 @@ exports.datatable = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    const { count, rows } = await Book.findAndCountAll({
+    const { count, rows } = await Book.findAll({
       where: condition,
-      limit: limit,
-      offset: offset,
+      limit,
+      offset,
       order: [["id", "ASC"]],
     });
 
