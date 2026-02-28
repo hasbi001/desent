@@ -25,9 +25,6 @@ verifyToken = (req, res, next) => {
              });
 };
 
-const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config");
-
 verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
