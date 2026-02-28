@@ -26,7 +26,7 @@ module.exports = function(app) {
 
     app.post("/auth/token", auth.generateToken);
 
-    app.get("/books", authJwt.verify, book.findAll);
+    app.get("/books", authJwt.verify, book.datatable);
 
     app.get("/books/:id", book.find);
     app.post("/books", [book.validate],book.create);
