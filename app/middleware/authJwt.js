@@ -26,11 +26,17 @@ verifyToken = (req, res, next) => {
 };
 
 verify = (req, res, next) => {
-  let token = req.session.token;
-
-  if (!token) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
     return res.status(401).send({
       message: "No token provided!",
+    });
+  }
+  
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).send({
+      message: "Invalid token format!",
     });
   }
 
