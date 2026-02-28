@@ -121,55 +121,49 @@ exports.delete = (req, res) => {
 };
 
 exports.datatable = async (req, res) => {
-    try {
-        const title = req.query.title;
+  try {
+    const { title, author, year } = req.query;
+
+    const title = req.query.title;
         var condTitle = title ? { title: { [Op.like]: `%${title}%` } } : null;
+        const description = req.query.description;
+        var condDesc = description ? { description: { [Op.like]: `%${description}%` } } : null;
         const author = req.query.author;
         var condAuthor = author ? { author: { [Op.like]: `%${author}%` } } : null;
-        const year = req.query.year;
-        var condYear = year ? { year: { [Op.like]: `%${year}%` } } : null;
+        const publicationYear = req.query.publication_year;
+        var condYear = publicationYear ? { publication_year: { [Op.like]: `%${publicationYear}%` } } : null;
         
-        var condition=null;
+        var condition={};
         if (condTitle != null || condDesc != null || condAuthor != null || condYear != null) {
             condition = {
                 [Op.or]: [
                     condTitle,
+                    condDesc,
                     condAuthor,
                     condYear
                 ]
             }
         }
 
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const offset = (page - 1) * limit;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
 
-        const { count, rows } = await Book.findAndCountAll({
-            where: condition,
-            limit: limit,
-            offset: offset,
-            order: [["createdAt", "DESC"]],
-            logging: console.log,
-        });
+    const { count, rows } = await Book.findAndCountAll({
+      where: condition,
+      limit: limit,
+      offset: offset,
+      order: [["id", "ASC"]],
+    });
 
-        res.status(200).json({
-            success: true,
-            message: "List Data Buku",
-            data: rows,
-            meta: {
-                total: count,
-                per_page: limit,
-                current_page: page,
-                last_page: Math.ceil(count / limit),
-            },
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "Error retrieving books",
-        });
-    }
-}
+    res.status(200).json(rows);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Error retrieving books",
+    });
+  }
+};
 
 exports.findAll = (req, res) => {
     
