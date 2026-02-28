@@ -19,16 +19,15 @@ exports.validate = (req, res, next) => {
 };
 
 exports.create = (req, res) => {
-    // ⚡ Optimized Sequelize - bypass semua overhead
+  
     Book.create({
       title: req.body.title,
       author: req.body.author,
       year: req.body.year
     }, {
-      validate: false,      // ⚡ Disable Sequelize validation
-      hooks: false,         // ⚡ Disable hooks
-      silent: true,         // ⚡ Don't update timestamps
-      logging: false        // ⚡ No SQL logging
+      validate: false,      
+      hooks: false,       
+      logging: false        
     })
     .then(book => {
       res.status(201).json(book);
