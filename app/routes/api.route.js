@@ -28,7 +28,7 @@ module.exports = function(app) {
 
     app.get("/books", authJwt.verify, book.findAll);
 
-    app.get("/books/:id", book.findOne);
+    app.get("/books/:id", book.find);
     app.post("/books", [book.validate],book.create);
 
     app.put("/books/:id", [book.validate] ,book.update);
