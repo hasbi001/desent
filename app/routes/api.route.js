@@ -29,8 +29,8 @@ module.exports = function(app) {
     app.get("/books", authJwt.verify, book.datatable);
 
     app.get("/books/:id", book.find);
-    app.post("/books", [book.validate],book.create);
+    app.post("/books", book.validate,book.create);
 
-    app.put("/books/:id", [book.validate] ,book.update);
+    app.put("/books/:id", book.validate ,book.update);
     app.delete("/books/:id", book.delete);
 };
