@@ -59,7 +59,7 @@ exports.find = (req, res) => {
         }
       })
       .catch(err => {
-            res.status(500).send({
+            res.status(404).send({
                 message: "Error retrieving Book with id=" + id,
                 data: null
             });
@@ -159,7 +159,7 @@ exports.datatable = async (req, res) => {
     res.status(200).json(rows);
 
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       message: error.message || "Error retrieving books",
     });
   }
