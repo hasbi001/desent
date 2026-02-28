@@ -15,13 +15,19 @@ exports.create = async (req, res) => {
   }
 
   try {
-    const book = await Book.create({
-      title: req.body.title,
-      author: req.body.author,
-      year: req.body.year
-    });
+    const book = await Book.create(
+      {
+        title: req.body.title,
+        author: req.body.author,
+        year: req.body.year
+      },
+      {
+        returning: false,
+        logging: false
+      }
+    );
 
-    res.status(201).json(book.get({ plain: true })); // ⚡ faster output
+    res.status(201).json(book);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
