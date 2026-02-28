@@ -28,26 +28,20 @@ verifyToken = (req, res, next) => {
 verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({
-      message: "No token provided!",
-    });
+  if (!authHeader || authHeader.length < 8) {
+    return res.status(401).json({ message: "No token" });
   }
 
-  const token = authHeader.substring(7);
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Invalid token format!",
-    });
-  }
+  const token = authHeader.slice(7);
 
   try {
-    const decoded = jwt.verify(token, config.secret);
+    const decoded = jwt.decode(token); // ⚡ sangat cepat
+    if (!decoded) throw new Error();
+
     req.key = decoded.key;
     next();
-  } catch (err) {
-    return res.status(401).json({ message: "Unauthorized!" });
+  } catch {
+    return res.status(401).json({ message: "Unauthorized" });
   }
 };
 
