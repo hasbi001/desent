@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports = {
   HOST: "mysql-210e9564-alihasbi001-2c23.j.aivencloud.com",
-  PORT: 24710, // <-- GANTI dengan port dari dashboard Aiven
+  PORT: 24710, 
   USER: "avnadmin",
   PASSWORD: "PASSWORD_KAMU",
   DB: "defaultdb",
