@@ -9,15 +9,11 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    description: {
-      type: Sequelize.TEXT,
-      allowNull: true,
-    },
     author: {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    publication_year: {
+    year: {
       type: Sequelize.INTEGER,
       allowNull: false,
     }
