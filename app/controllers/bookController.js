@@ -47,10 +47,11 @@ exports.update = async (req, res) => {
   if (!updated) {
     return res.status(404).json({ message: "Book not found" });
   }
-
-  const updatedBook = await Book.findByPk(id);
-
-  return res.status(200).json(updatedBook);
+  else
+  {
+    const updatedBook = await Book.findByPk(id);
+    return res.status(200).json(updatedBook);
+  }
 };
 
 exports.find = async (req, res) => { 
