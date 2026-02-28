@@ -110,7 +110,9 @@ exports.generateToken = async (req,res)=>{
 
     req.session.token = token;
 
-    return res.status(200).send(token);
+    return res.status(200).send({
+      token: token
+    });
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
