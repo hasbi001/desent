@@ -19,15 +19,18 @@ module.exports = function(app) {
 
     app.post("/auth/signin", auth.signin);
     app.post("/auth/signout", auth.signout);
+    
+    app.get("/ping", home.ping);
+
+    app.post("/echo", home.echo);
+
     app.post("/auth/token", auth.generateToken);
 
-    app.get("/ping", home.ping);
-    app.post("/echo", home.echo);
-    app.post("/books", [book.validate], book.create);
-    app.get("/books", book.findAll);
-    app.get("/books/:id", book.find);
+    app.get("/books", authJwt.verify, book.findAll);
 
-    app.get("/books", [authJwt.verify],book.datatable);
-    app.put("/books/:id", [book.validate], book.update);
+    app.get("/books/:id", book.findOne);
+    app.post("/books", [book.validate],book.create);
+
+    app.put("/books/:id", [book.validate] ,book.update);
     app.delete("/books/:id", book.delete);
 };
