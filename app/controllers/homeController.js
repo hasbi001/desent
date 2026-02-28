@@ -1,12 +1,12 @@
 exports.ping = (req, res) => {
-  res.status(200).send({
-    success: ture
+  return res.status(200).json({
+    success: true
   });
 };
 
 exports.echo = (req, res) => {
-  res.status(200).send({
-    success: ture
+  return res.status(200).json({
+    success: true
   });
 };
 
