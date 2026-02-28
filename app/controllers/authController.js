@@ -114,7 +114,5 @@ exports.generateToken = async (req,res)=>{
                             expiresIn: 86400, 
                            });
   req.session.token = token;
-  res.status(200).send({
-    message : "success"
-  });
+  res.status(200).send(token);
 }
