@@ -6,7 +6,7 @@ module.exports = {
   dialect: "mysql",
   ssl: {
     ca:"./ca.pem"
-  }
+  },
   pool: {
     max: 5,
     min: 0,
