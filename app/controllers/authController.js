@@ -98,29 +98,8 @@ exports.signout = async (req, res) => {
 };
 
 exports.generateToken = async (req,res)=>{
- try {
-    const user = await User.findOne({
-      where: {
-        username: req.body.username,
-      },
-    });
-
-    if (!user) {
-      return res.status(404).send({ message: "User Not found." });
-    }
-
-    const passwordIsValid = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
-
-    if (!passwordIsValid) {
-      return res.status(401).send({
-        message: "Invalid Password!",
-      });
-    }
-
-    const token = jwt.sign({ id: user.id },
+   try {
+    const token = jwt.sign({ username: req.body.username },
                            config.secret,
                            {
                             algorithm: 'HS256',
@@ -128,11 +107,6 @@ exports.generateToken = async (req,res)=>{
                             expiresIn: 86400, 
                            });
 
-    let authorities = [];
-    const roles = await user.getRoles();
-    for (let i = 0; i < roles.length; i++) {
-      authorities.push("ROLE_" + roles[i].name.toUpperCase());
-    }
 
     req.session.token = token;
 
