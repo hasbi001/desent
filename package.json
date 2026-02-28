@@ -1,0 +1,34 @@
+{
+  "name": "desent",
+  "version": "1.0.0",
+  "description": "api quest desent",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hasbi001/desent.git"
+  },
+  "keywords": [
+    "api",
+    "node.js",
+    "express.js"
+  ],
+  "author": "Hasbi Ali Firdaus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hasbi001/desent/issues"
+  },
+  "homepage": "https://github.com/hasbi001/desent#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-session": "^2.1.1",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.18.2",
+    "sequelize": "^6.37.7"
+  }
+}
