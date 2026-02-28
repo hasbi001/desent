@@ -2,42 +2,44 @@ const db = require("../models");
 const Book = db.book;
 const { body, validationResult } = require("express-validator");
 
-exports.validate = [
-  body("title").notEmpty().withMessage("title is required"),
-  body("author").notEmpty().withMessage("author is required"),
-  body("year").notEmpty().withMessage("year is required").isNumeric()
-];
+exports.validate = (req, res, next) => {
+  const { title, author, year } = req.body;
+  
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json([{ message: "title is required" }]);
+  }
+  if (!author || typeof author !== 'string' || author.trim() === '') {
+    return res.status(400).json([{ message: "author is required" }]);
+  }
+  if (!year || typeof year !== 'number' || !Number.isInteger(year)) {
+    return res.status(400).json([{ message: "year is required and must be a number" }]);
+  }
+  
+  next();
+};
 
 exports.create = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors.array());
-  }
-
+  // Validation is now handled by the middleware above
   try {
     const book = await Book.create(
       {
-        title: req.body.title,
-        author: req.body.author,
+        title: req.body.title.trim(),
+        author: req.body.author.trim(),
         year: req.body.year
       },
       {
-        returning: false,
+        returning: true,
         logging: false
       }
     );
 
     res.status(201).json(book);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
 
 exports.update = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(401).json({ errors: errors.array() });
-  }
 
   const [updated] = await Book.update(req.body, {
     where: { id: req.params.id }
